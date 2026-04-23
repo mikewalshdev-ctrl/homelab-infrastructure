@@ -1,0 +1,71 @@
+version: "3.9"
+
+services:
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${JELLYSEERR_CONFIG_DIR}:/app/config
+    ports:
+      - "${JELLYSEERR_PORT}:5055"
+    restart: unless-stopped
+    networks:
+      - homelab
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${PROWLARR_CONFIG_DIR}:/config
+    ports:
+      - "${PROWLARR_PORT}:9696"
+    restart: unless-stopped
+    networks:
+      - homelab
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${RADARR_CONFIG_DIR}:/config
+      - ${MEDIA_DIR}:/data
+    ports:
+      - "${RADARR_PORT}:7878"
+    restart: unless-stopped
+    networks:
+      - homelab
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - WEBUI_PORT=${QBITTORRENT_WEBUI_PORT}
+    volumes:
+      - ${QBITTORRENT_CONFIG_DIR}:/config
+      - ${DOWNLOADS_DIR}:/data/downloads
+    ports:
+      - "${QBITTORRENT_WEBUI_PORT}:8080"
+      - "${QBITTORRENT_PEER_PORT}:6881"
+      - "${QBITTORRENT_PEER_PORT}:6881/udp"
+    restart: unless-stopped
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    driver: bridge

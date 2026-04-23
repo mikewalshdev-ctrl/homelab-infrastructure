@@ -1,0 +1,20 @@
+# Environment & Secrets
+.env
+.env.*
+!.env.example
+
+# Docker
+*.dck
+*.docker
+.docker/
+
+# OS & Editor Junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs & Temp
+*.log
+tmp/
+temp/
